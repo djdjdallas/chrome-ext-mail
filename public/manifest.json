@@ -10,7 +10,22 @@
     "48": "/icons/icon48.png",
     "192": "/icons/icon192.png"
   },
-  "permissions": [],
+  "permissions": [
+    "identity",
+    "tabs",
+    "storage"
+  ],
+  "oauth2": {
+    "client_id": "408832597152-54du828j5per1kef5khdk340j7rukppn.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email"
+    ]
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [
     {
       "resources": ["index.html"],
@@ -23,7 +38,6 @@
       "js": ["inject.js"]
     }
   ],
-  "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "index.html"
   }

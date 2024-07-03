@@ -1,0 +1,87 @@
+.container {
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filter-container h2 {
+  margin-right: 20px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.template-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.template-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.template-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  background-color: #f7f7f7;
+}
+
+.template-content {
+  padding: 20px;
+  text-align: center;
+}
+
+.template-title {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.template-description {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.template-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.template-tone {
+  background-color: #eee;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.template-button {
+  background-color: #0070f3;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.template-button:hover {
+  background-color: #005bb5;
+}
