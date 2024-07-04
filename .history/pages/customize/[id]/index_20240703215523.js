@@ -74,8 +74,8 @@ export default function CustomizeEmail() {
   if (!emailTemplate) return <div>Loading...</div>;
 
   return (
-    <div className="w-full max-w-4xl mt-10 mx-auto px-4 md:px-6 py-12 md:py-20">
-      <div className="space-y-4 text-center">
+    <div className="w-full max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20">
+      <div className="space-y-6 text-center">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tighter">
           Customize Your Email Template
         </h1>
@@ -83,7 +83,7 @@ export default function CustomizeEmail() {
           Create a personalized email to engage your mobile app users.
         </p>
       </div>
-      <div className="mt-8 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

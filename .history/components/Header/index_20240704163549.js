@@ -60,10 +60,6 @@ export default function Header() {
     }
   };
 
-  const handleMenuClick = () => {
-    setIsOpen(false);
-  };
-
   return (
     <header className="flex justify-between items-center p-4 border-b-2 text-black bg-white fixed w-full top-0 z-50">
       <Link href="/" prefetch={false}>
@@ -99,53 +95,35 @@ export default function Header() {
         {isOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
             <Link href="/" passHref>
-              <div
-                onClick={handleMenuClick}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-              >
+              <div className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">
                 Home
               </div>
             </Link>
             <Link href="/dashboard" passHref>
-              <div
-                onClick={handleMenuClick}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-              >
+              <div className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">
                 Dashboard
               </div>
             </Link>
             <Link href="/customize-email" passHref>
-              <div
-                onClick={handleMenuClick}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-              >
+              <div className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">
                 Customize Email
               </div>
             </Link>
             <Link href="/template" passHref>
-              <div
-                onClick={handleMenuClick}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-              >
+              <div className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">
                 Email Templates
               </div>
             </Link>
             {!user ? (
               <div
-                onClick={() => {
-                  handleLogin();
-                  handleMenuClick();
-                }}
+                onClick={handleLogin}
                 className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer w-full text-left"
               >
                 Login with Google
               </div>
             ) : (
               <div
-                onClick={() => {
-                  handleLogout();
-                  handleMenuClick();
-                }}
+                onClick={handleLogout}
                 className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer w-full text-left"
               >
                 Logout

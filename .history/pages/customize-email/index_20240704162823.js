@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { Webcam } from "lucide-react";
 
-export default function CustomizeEmail() {
+export default function CustomizeEmailView() {
   const router = useRouter();
   const { id } = router.query;
   const supabase = createClientComponentClient();

@@ -83,7 +83,7 @@ export default function CustomizeEmail() {
           Create a personalized email to engage your mobile app users.
         </p>
       </div>
-      <div className="mt-8 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>

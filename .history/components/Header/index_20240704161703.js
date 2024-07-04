@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
   const supabase = createClientComponentClient();
-  const router = useRouter();
 
   useEffect(() => {
     const getUser = async () => {
@@ -30,7 +28,6 @@ export default function Header() {
       (event, session) => {
         if (event === "SIGNED_IN") {
           setUser(session.user);
-          router.push("/dashboard"); // Redirect to dashboard after login
         } else if (event === "SIGNED_OUT") {
           setUser(null);
         }
@@ -40,7 +37,7 @@ export default function Header() {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [supabase, router]);
+  }, [supabase]);
 
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -58,10 +55,6 @@ export default function Header() {
     } else {
       setUser(null);
     }
-  };
-
-  const handleMenuClick = () => {
-    setIsOpen(false);
   };
 
   return (
@@ -99,53 +92,35 @@ export default function Header() {
         {isOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
             <Link href="/" passHref>
-              <div
-                onClick={handleMenuClick}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-              >
+              <div className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">
                 Home
               </div>
             </Link>
             <Link href="/dashboard" passHref>
-              <div
-                onClick={handleMenuClick}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-              >
+              <div className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">
                 Dashboard
               </div>
             </Link>
-            <Link href="/customize-email" passHref>
-              <div
-                onClick={handleMenuClick}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-              >
-                Customize Email
+            <Link href="/new" passHref>
+              <div className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">
+                New
               </div>
             </Link>
             <Link href="/template" passHref>
-              <div
-                onClick={handleMenuClick}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
-              >
+              <div className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer">
                 Email Templates
               </div>
             </Link>
             {!user ? (
               <div
-                onClick={() => {
-                  handleLogin();
-                  handleMenuClick();
-                }}
+                onClick={handleLogin}
                 className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer w-full text-left"
               >
                 Login with Google
               </div>
             ) : (
               <div
-                onClick={() => {
-                  handleLogout();
-                  handleMenuClick();
-                }}
+                onClick={handleLogout}
                 className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer w-full text-left"
               >
                 Logout

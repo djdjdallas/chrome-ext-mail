@@ -8,34 +8,47 @@ import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { Webcam } from "lucide-react";
 
-export default function CustomizeEmail() {
+export default function CustomizeEmailView() {
   const router = useRouter();
-  const { id } = router.query;
   const supabase = createClientComponentClient();
-  const [emailTemplate, setEmailTemplate] = useState(null);
+  const [user, setUser] = useState(null);
   const [customContent, setCustomContent] = useState("");
   const [chatgptResponse, setChatgptResponse] = useState("");
+  const [subject, setSubject] = useState("");
 
   useEffect(() => {
-    if (id) {
-      const fetchEmailTemplate = async () => {
-        const { data, error } = await supabase
-          .from("email_templates")
-          .select("title, subject, body")
-          .eq("id", id)
-          .single();
-
+    const fetchUser = async () => {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUser(session.user);
+      } else {
         if (error) {
-          console.error("Error fetching email template:", error);
-        } else {
-          setEmailTemplate(data);
-          setCustomContent(data.body.replace(/\\n/g, "\n"));
+          console.error("Error fetching user or no session:", error?.message);
         }
-      };
+        router.push("/#");
+      }
+    };
 
-      fetchEmailTemplate();
-    }
-  }, [id, supabase]);
+    fetchUser();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "SIGNED_IN") {
+          setUser(session.user);
+        } else if (event === "SIGNED_OUT") {
+          setUser(null);
+          router.push("/#");
+        }
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [supabase, router]);
 
   const handleContentChange = (e) => {
     setCustomContent(e.target.value);
@@ -69,9 +82,27 @@ export default function CustomizeEmail() {
   const handleSave = async () => {
     console.log("Customized Content:", customContent);
     console.log("ChatGPT Response:", chatgptResponse);
+
+    const { data, error } = await supabase.from("email_tracking").insert([
+      {
+        user_id: user.id, // assuming user is available in your state
+        email: customContent,
+        subject,
+        tracked: true,
+      },
+    ]);
+
+    if (error) {
+      console.error("Error saving email:", error);
+    } else {
+      console.log("Email saved successfully:", data);
+      router.push("/template");
+    }
   };
 
-  if (!emailTemplate) return <div>Loading...</div>;
+  if (!user) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="w-full max-w-4xl mt-10 mx-auto px-4 md:px-6 py-12 md:py-20">
@@ -92,13 +123,8 @@ export default function CustomizeEmail() {
                 id="subject"
                 placeholder="Enter email subject"
                 className="w-full"
-                value={emailTemplate.subject}
-                onChange={(e) =>
-                  setEmailTemplate({
-                    ...emailTemplate,
-                    subject: e.target.value,
-                  })
-                }
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
               />
             </div>
           </div>
