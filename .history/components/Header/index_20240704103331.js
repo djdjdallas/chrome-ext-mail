@@ -1,61 +1,8 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-export default function Header() {
+export default function Header({ user, handleLogin, handleLogout }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const supabase = createClientComponentClient();
-
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-      if (error) {
-        console.error("Error fetching user session:", error.message);
-      } else {
-        setUser(session?.user || null);
-      }
-    };
-
-    getUser();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === "SIGNED_IN") {
-          setUser(session.user);
-        } else if (event === "SIGNED_OUT") {
-          setUser(null);
-        }
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [supabase]);
-
-  const handleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    });
-    if (error) {
-      console.error("Error signing in:", error.message);
-    }
-  };
-
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error("Error signing out:", error.message);
-    } else {
-      setUser(null);
-    }
-  };
 
   return (
     <header className="flex justify-between items-center p-4 border-b-2 text-black bg-white fixed w-full top-0 z-50">

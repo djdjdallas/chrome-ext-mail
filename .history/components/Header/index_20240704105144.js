@@ -4,9 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-export default function Header() {
+export default function Header({ user, setUser }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null);
   const supabase = createClientComponentClient();
 
   useEffect(() => {
@@ -23,21 +22,7 @@ export default function Header() {
     };
 
     getUser();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === "SIGNED_IN") {
-          setUser(session.user);
-        } else if (event === "SIGNED_OUT") {
-          setUser(null);
-        }
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [supabase]);
+  }, [supabase, setUser]);
 
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({

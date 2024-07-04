@@ -26,13 +26,14 @@ export default function EmailTemplates({ navigateToPage }) {
   useEffect(() => {
     const fetchUser = async () => {
       const {
-        data: { session },
+        data: { user },
         error,
-      } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
-      } else if (error || !session) {
-        console.error("Error fetching user or no session:", error?.message);
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUser(user);
+      } else if (error) {
+        console.error("Error fetching user:", error.message);
+      } else {
         router.push("/"); // Redirect to home if no user is logged in
       }
     };

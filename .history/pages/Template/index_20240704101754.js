@@ -26,13 +26,14 @@ export default function EmailTemplates({ navigateToPage }) {
   useEffect(() => {
     const fetchUser = async () => {
       const {
-        data: { session },
+        data: { user },
         error,
-      } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
-      } else if (error || !session) {
-        console.error("Error fetching user or no session:", error?.message);
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUser(user);
+      } else if (error) {
+        console.error("Error fetching user:", error.message);
+      } else {
         router.push("/"); // Redirect to home if no user is logged in
       }
     };
@@ -138,7 +139,7 @@ export default function EmailTemplates({ navigateToPage }) {
           </Button>
         </div>
       </div>
-      <div className="template-grid">
+      <div className="template-grid ">
         {filteredTemplates.map((template) => (
           <div
             key={template.id}
@@ -151,7 +152,7 @@ export default function EmailTemplates({ navigateToPage }) {
               {template.tone === "Formal" && <GraduationCap size={48} />}
               {template.tone === "Popular" && <Star size={48} />}
             </div>
-            <div className="template-content">
+            <div className="template-content ">
               <h3 className="template-title text-xl font-bold text-center">
                 {template.title}
               </h3>

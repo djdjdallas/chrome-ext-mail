@@ -13,30 +13,11 @@ export default function Header() {
     const getUser = async () => {
       const {
         data: { session },
-        error,
       } = await supabase.auth.getSession();
-      if (error) {
-        console.error("Error fetching user session:", error.message);
-      } else {
-        setUser(session?.user || null);
-      }
+      setUser(session?.user || null);
     };
 
     getUser();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === "SIGNED_IN") {
-          setUser(session.user);
-        } else if (event === "SIGNED_OUT") {
-          setUser(null);
-        }
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
   }, [supabase]);
 
   const handleLogin = async () => {

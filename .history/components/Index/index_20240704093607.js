@@ -1,26 +1,24 @@
-"use client";
-
 import { useEffect, useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import Header from "@/components/Header"; // Make sure the import path is correct
 import Link from "next/link";
+import { supabase } from "@/lib/supabaseClient";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Header from "@/components/Header";
 
 export default function Index({ navigateToPage }) {
   const [user, setUser] = useState(null);
-  const supabase = createClientComponentClient();
 
   useEffect(() => {
     const fetchUser = async () => {
       const {
-        data: { session },
+        data: { user },
         error,
-      } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
-      } else if (error || !session) {
-        console.error("Error fetching user or no session:", error?.message);
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUser(user);
+      }
+      if (error) {
+        console.error("Error fetching user:", error.message);
       }
     };
 
@@ -39,12 +37,34 @@ export default function Index({ navigateToPage }) {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, []);
+
+  const handleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+    if (error) {
+      console.error("Error signing in:", error.message);
+    }
+  };
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error signing out:", error.message);
+    }
+  };
 
   return (
-    <div className="flex flex-col min-h-[100dvh] max-w-[350px] mx-auto pt-10">
-      <Header />
-      <main className="flex-1 mt-16">
+    <div className="flex flex-col min-h-[100dvh] max-w-[350px] mx-auto pt-16">
+      {" "}
+      {/* Adjusted pt-16 to compensate for sticky header */}
+      <Header
+        user={user}
+        handleLogin={handleLogin}
+        handleLogout={handleLogout}
+      />
+      <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
@@ -59,16 +79,20 @@ export default function Index({ navigateToPage }) {
                     gain valuable insights.
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Link href="#" prefetch={false}>
-                    <div className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
-                      Get Started
-                    </div>
+                <div className="flex flex-col gap-2 ">
+                  <Link
+                    href="#"
+                    className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                    prefetch={false}
+                  >
+                    Get Started
                   </Link>
-                  <Link href="#" prefetch={false}>
-                    <div className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
-                      Learn More
-                    </div>
+                  <Link
+                    href="#"
+                    className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                    prefetch={false}
+                  >
+                    Learn More
                   </Link>
                 </div>
               </div>
@@ -234,18 +258,41 @@ export default function Index({ navigateToPage }) {
           &copy; 2024 Mail Blitz Email CRM. All rights reserved.
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link href="#" prefetch={false}>
-            <div className="text-xs hover:underline underline-offset-4">
-              Terms of Service
-            </div>
+          <Link
+            href="#"
+            className="text-xs hover:underline underline-offset-4"
+            prefetch={false}
+          >
+            Terms of Service
           </Link>
-          <Link href="#" prefetch={false}>
-            <div className="text-xs hover:underline underline-offset-4">
-              Privacy
-            </div>
+          <Link
+            href="#"
+            className="text-xs hover:underline underline-offset-4"
+            prefetch={false}
+          >
+            Privacy
           </Link>
         </nav>
       </footer>
     </div>
+  );
+}
+
+function MountainIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
+    </svg>
   );
 }

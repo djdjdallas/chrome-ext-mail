@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "@/components/ui/button";
 import { useTemplate } from "@/context/TemplateContext";
@@ -14,68 +13,31 @@ import {
   Star,
 } from "lucide-react";
 import "styles/globals.css";
-
 export default function EmailTemplates({ navigateToPage }) {
   const [selectedTone, setSelectedTone] = useState("all");
   const [emailTemplates, setEmailTemplates] = useState([]);
-  const [user, setUser] = useState(null);
-  const router = useRouter();
   const supabase = createClientComponentClient();
   const { setSelectedTemplate } = useTemplate();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
-      } else if (error || !session) {
-        console.error("Error fetching user or no session:", error?.message);
-        router.push("/"); // Redirect to home if no user is logged in
+    const fetchEmailTemplates = async () => {
+      const { data, error } = await supabase
+        .from("email_templates")
+        .select("id, title, description, subject, body, tone, image_url") // Ensure 'subject' and 'body' are included
+        .order("tone", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching email templates:", error);
+      } else {
+        const sortedTemplates = data.sort((a, b) =>
+          a.tone === "Popular" ? -1 : b.tone === "Popular" ? 1 : 0
+        );
+        setEmailTemplates(sortedTemplates);
       }
     };
 
-    fetchUser();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === "SIGNED_IN") {
-          setUser(session.user);
-        } else if (event === "SIGNED_OUT") {
-          setUser(null);
-          router.push("/"); // Redirect to home if user signs out
-        }
-      }
-    );
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, [supabase, router]);
-
-  const fetchEmailTemplates = async () => {
-    const { data, error } = await supabase
-      .from("email_templates")
-      .select("id, title, description, subject, body, tone, image_url")
-      .order("tone", { ascending: true });
-
-    if (error) {
-      console.error("Error fetching email templates:", error);
-    } else {
-      const sortedTemplates = data.sort((a, b) =>
-        a.tone === "Popular" ? -1 : b.tone === "Popular" ? 1 : 0
-      );
-      setEmailTemplates(sortedTemplates);
-    }
-  };
-
-  useEffect(() => {
-    if (user) {
-      fetchEmailTemplates();
-    }
-  }, [user]);
+    fetchEmailTemplates();
+  }, [supabase]);
 
   const filteredTemplates =
     selectedTone === "all"
@@ -85,12 +47,8 @@ export default function EmailTemplates({ navigateToPage }) {
             template.tone.toLowerCase() === selectedTone.toLowerCase()
         );
 
-  if (!user) {
-    return null; // Optionally, return a loading indicator while checking auth status
-  }
-
   return (
-    <div className="container mt-20">
+    <div className="container mt-10">
       <div className="filter-container">
         <h2>Filter by Tone</h2>
         <div className="filter-buttons">
@@ -138,7 +96,7 @@ export default function EmailTemplates({ navigateToPage }) {
           </Button>
         </div>
       </div>
-      <div className="template-grid">
+      <div className="template-grid ">
         {filteredTemplates.map((template) => (
           <div
             key={template.id}
@@ -151,7 +109,7 @@ export default function EmailTemplates({ navigateToPage }) {
               {template.tone === "Formal" && <GraduationCap size={48} />}
               {template.tone === "Popular" && <Star size={48} />}
             </div>
-            <div className="template-content">
+            <div className="template-content ">
               <h3 className="template-title text-xl font-bold text-center">
                 {template.title}
               </h3>
