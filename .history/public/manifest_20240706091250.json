@@ -2,13 +2,13 @@
   "manifest_version": 3,
   "name": "NEXT-CHROME-STARTER",
   "short_name": "N-C-S",
-  "version": "0.0.4",
-  "description": "Next.js Chrome Extension ",
+  "version": "0.0.2",
+  "description": "Next.js Chrome Extension Starter, Demo Example by ibnzUK. https://github.com/ibnzUK/next-chrome-starter",
   "icons": {
-    "16": "icons/icon16.png",
-    "32": "icons/icon32.png",
-    "48": "icons/icon48.png",
-    "192": "icons/icon192.png"
+    "16": "/icons/icon16.png",
+    "32": "/icons/icon32.png",
+    "48": "/icons/icon48.png",
+    "192": "/icons/icon192.png"
   },
   "permissions": [
     "identity",
@@ -23,7 +23,7 @@
     ]
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "dist/background.js"
   },
   "host_permissions": ["<all_urls>"],
   "web_accessible_resources": [

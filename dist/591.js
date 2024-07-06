@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknext_chrome_starter=self.webpackChunknext_chrome_starter||[]).push([[591],{591:e=>{e.exports=function(){throw new Error("ws does not work in the browser. Browser clients must use the native WebSocket object")}}}]);

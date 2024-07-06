@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { supabase } from "../lib/supabaseClient"; // Ensure the path is correct
-
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 const App = () => {
+  const supabase = createClientComponentClient();
   return (
     <div>
       <h1>Welcome to your Chrome Extension</h1>

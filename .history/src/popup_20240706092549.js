@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { supabase } from "../lib/supabaseClient"; // Ensure the path is correct
+import { supabase } from "@/lib/supabaseClient";
 
 const App = () => {
   return (
