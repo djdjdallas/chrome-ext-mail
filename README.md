@@ -112,4 +112,7 @@ SOFTWARE.
 # chrome-ext-mail
 # chrome-ext-mail
 # chrome-ext-mail
+<<<<<<< HEAD
 # chrome-ext-mail
+=======
+>>>>>>> origin/main
